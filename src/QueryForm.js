@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import s from './QueryForm.module.css';
 
-const API = 'http://54.86.222.135:5000';
+const API = 'https://cors-everywhere-me.herokuapp.com/http://54.86.222.135:5000';
 
 const QueryForm = () => {
   const [url, setUrl] = useState("");
