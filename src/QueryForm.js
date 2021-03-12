@@ -1,23 +1,39 @@
 import React, { useState, useEffect } from "react";
+import { Spinner } from 'react-bootstrap';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
 import s from './QueryForm.module.css';
 
 const API = 'https://cors-everywhere-me.herokuapp.com/http://54.86.222.135:5000';
 
 const QueryForm = () => {
-  const [url, setUrl] = useState("");
+  const [url, setUrl] = useState('');
   const [predictions, setPredictions] = useState([]);
   const [best, setBest] = useState('');
+  const [waiting, setWaiting] = useState(false);
 
   const query = (queryUrl) => {
+    if (queryUrl === '') { alert("URL is empty"); return; }  
+
+    setWaiting(true);
+    queryUrl = encodeURI(queryUrl);
     fetch(`${API}/predict?url=${queryUrl}`, {
       method: "POST"
     })
-      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+        return res.json();
+      })
       .then(res => {
         setPredictions(res.predictions);
         decide(res.predictions);
+        setWaiting(false);
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        console.log(err);
+        alert("Oops! Server can't process this particular image.");
+        setWaiting(false);
+      })
   }
 
   const decide = (decidePreds) => {
@@ -30,7 +46,7 @@ const QueryForm = () => {
   return (
     <div id={s.root}>
       <div id={s.title}>
-        Welcome to dog breed identifier!
+        <h1>Welcome to dog breed identifier!</h1>
       </div>
 
       <div id={s.input}>
@@ -45,14 +61,31 @@ const QueryForm = () => {
 
       </div>
 
+      <div id={s.preview}>
+        <img src={url === '' ? `${process.env.PUBLIC_URL}/dog.png` : url} />
+      </div>
+
       <div id={s.result}>
-        {best !== '' && <h2>We think it's a [{best}]</h2>}
+
         {
-          predictions?
-            
-          predictions.map((d, i) => <span key={i}>{d.label} : {d.probability}</span>)
+          waiting?
+          <>
+            <Spinner animation="border" role="status">
+              <span className="sr-only">Loading...</span>
+            </Spinner>
+          </>
           :
-          "No prediction availale"
+          <>
+          {best !== '' && <h1>We think it's a <span className={s.breed}>{best}</span> with {Math.round(predictions[0].probability * 100)}% confidence</h1>}
+          {
+            predictions?
+              
+            predictions.map((d, i) => <span key={i}>{d.label} : {d.probability}</span>)
+            :
+            "No prediction availale"
+          }
+          </>
+
         }
       </div>
 

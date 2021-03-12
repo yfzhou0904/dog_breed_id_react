@@ -1,6 +1,62 @@
 
 
+
+#root {
+  width: 100%;
+  height: 100vh;
+
+  background-color: aliceblue;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+#title h1 {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+#input input {
+  width: 400px;
+  height: 50px;
+
+  border: dotted black 1px;
+
+  background-color: white;
+
+  font-size: 40px;
+}
+
+#input input:focus {
+  outline: none;
+}
+
+#control button {
+  height: 50px;
+  width: 250px;
+
+  background-color: aquamarine;
+  border: none;
+  outline: none;
+}
+
+#control button:focus {
+  outline: none;
+}
+
+#preview img {
+  height: 250px;
+}
+
 #result {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.breed {
+  font-size: 50px;
+  color: brown;
 }
